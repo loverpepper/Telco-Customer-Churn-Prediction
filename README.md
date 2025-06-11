@@ -86,14 +86,13 @@
 Final Accuracy Score 
 0.8170616113744076
 Classification Report:
-               precision    recall  f1-score   support
-
-       False       0.85      0.91      0.88      1549
-        True       0.70      0.55      0.62       561
-
-    accuracy                           0.82      2110
-   macro avg       0.77      0.73      0.75      2110
-weighted avg       0.81      0.82      0.81      2110
+| Metric / Class        | Precision | Recall   | F1-score | Support   |
+| --------------------- | --------- | -------- | -------- | --------- |
+| **False (Not Churn)** | **0.85**  | **0.91** | **0.88** | **1 549** |
+| **True (Churn)**      | 0.70      | 0.55     | 0.62     | 561       |
+| **Accuracy**          | –         | –        | **0.82** | **2 110** |
+| **Macro Avg**         | 0.77      | 0.73     | 0.75     | 2 110     |
+| **Weighted Avg**      | 0.81      | 0.82     | 0.81     | 2 110     |
 
 # 未来改进方向
 尝试更多的特征工程方法，例如特征交互或特征选择。
