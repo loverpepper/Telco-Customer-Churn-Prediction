@@ -1,101 +1,85 @@
-# Telco Customer Churn Prediction
+# 📉 Telco Customer Churn Prediction
 
-本项目旨在预测电信客户是否会流失（Churn），通过数据清洗、特征工程和多种机器学习模型的训练与优化，最终构建一个高效的分类器。
+本项目旨在通过机器学习方法预测电信公司客户的流失行为，从而为客户留存策略提供数据支持。
 
-## 项目结构
+---
 
-- `Telco Customer Churn Prediction.ipynb`：主代码文件，包含数据处理、可视化、模型训练与评估。
-- `WA_Fn-UseC_-Telco-Customer-Churn.csv`：原始数据文件。
-- `WA_Fn-UseC_-Telco-Customer-Churn.xls`：原始数据的 Excel 格式。
-- `solution - customer-churn-prediction.ipynb`：可能是另一个解决方案的笔记本文件。
+## 📦 项目背景
 
-## 数据集描述
+客户流失（Churn）是电信行业普遍存在的挑战。通过分析客户属性和行为数据，建立精准的流失预测模型，能够帮助企业：
+- 提前识别高风险客户
+- 有针对性地制定营销或服务策略
+- 降低客户流失率，提升长期收益
 
-数据集包含电信客户的相关信息，目标是预测客户是否会流失（`Churn`）。以下是主要字段的分类：
+---
 
-### 客户信息
-- `customerID`：客户唯一标识符。
-- `gender`：性别。
-- `SeniorCitizen`：是否为老年人。
-- `Partner`：是否有配偶。
-- `Dependents`：是否有家属。
+## 📁 数据来源
 
-### 服务使用情况
-- `tenure`：使用时长（以月为单位）。
-- `PhoneService`：是否有电话服务。
-- `MultipleLines`：是否有多条电话线。
-- `InternetService`：上网服务类型。
-- `OnlineSecurity`、`DeviceProtection`、`TechSupport` 等：是否订购相关服务。
+- 数据集名称：`WA_Fn-UseC_-Telco-Customer-Churn.csv`
+- 来源：IBM Sample Data
+- 包含信息：
+  - 客户人口统计特征
+  - 合约类型、付款方式等服务属性
+  - 月租费用、总消费
+  - 客户是否流失（目标变量）
 
-### 合同与付费信息
-- `Contract`：合同类型（月度、一年或两年）。
-- `PaperlessBilling`：是否无纸化账单。
-- `PaymentMethod`：支付方式。
-- `MonthlyCharges`：每月费用。
-- `TotalCharges`：总费用。
+---
 
-## 数据处理
+## 🔍 数据预处理
 
-1. **缺失值处理**：
-   - `TotalCharges` 列中存在缺失值，原因是部分客户刚注册（`tenure=0`）。
-   - 删除了这些缺失值行。
+- 删除缺失值行（如 TotalCharges 为空）
+- 类别变量编码（Label Encoding / One-Hot Encoding）
+- 标准化数值变量（StandardScaler）
+- 生成训练集与测试集（train_test_split）
 
-2. **特征工程**：
-   - 将 `customerID` 设置为索引。
-   - 将 `SeniorCitizen` 转换为分类变量。
-   - 对分类变量进行独热编码（One-Hot Encoding）。
-   - 对数值变量（`tenure`、`MonthlyCharges`、`TotalCharges`）进行标准化处理。
+---
 
-3. **数据可视化**：
-   - 绘制了流失率的饼图。
-   - 分析了不同特征与流失率的关系。
-   - 使用 KDE 图比较了数值变量在流失与未流失客户中的分布。
-   - 绘制了相关性热力图。
+## 📊 探索性数据分析（EDA）
 
-## 模型训练与评估
+- 使用 Seaborn 和 Matplotlib 进行可视化
+- 分析了流失客户在：
+  - 合约类型、服务类型、付款方式上的分布差异
+  - 收费结构与服务时长（tenure）的影响
+- 热力图分析变量相关性
 
-使用了多种机器学习模型进行训练和评估，包括：
+---
 
-1. **Logistic Regression**：
-   - 使用网格搜索优化了正则化参数。
-   - 绘制了 ROC 曲线。
+## 🧠 模型训练与评估
 
-2. **KNN**：
-   - 基础模型，未进行超参数调优。
+对多个模型进行了训练与对比：
 
-3. **SVC**：
-   - 使用加权分类处理类别不平衡问题。
+| 模型                | 准确率 | AUC    | 精确率 | 召回率 | F1 分数 |
+|---------------------|--------|--------|--------|--------|----------|
+| Logistic Regression | 0.814  | 0.857  | 0.674  | 0.581  | **0.624** |
+| Random Forest       | 0.810  | 0.859  | 0.694  | 0.513  | 0.590 |
+| AdaBoost            | 0.815  | **0.864** | **0.702** | 0.526  | 0.601 |
 
-4. **Random Forest**：
-   - 使用网格搜索优化了超参数。
-   - 最佳参数：`{'bootstrap': True, 'max_depth': 8, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 100}`。
+✅ 同时绘制了 ROC 曲线用于可视化模型性能。
 
-5. **AdaBoost**：
-   - 使用网格搜索优化了学习率和基分类器数量。
+---
 
-6. **LightGBM**：
-   - 使用随机搜索优化了超参数。
+## ⭐ 关键特征分析
 
-7. **Voting Classifier**：
-   - 集成了 Logistic Regression、Random Forest 和 AdaBoost 模型，采用软投票方式。
+基于模型重要性排序，影响客户流失的关键因素包括：
 
-### 最终模型表现
+- `tenure`（客户使用时长）
+- `Contract_Month-to-month`（短期合约客户更易流失）
+- `Contract_Two_year`（长期合约客户更稳定）
 
-使用 Voting Classifier 集成模型，最终的分类报告如下：
+---
 
-Final Accuracy Score 
-0.8170616113744076
-Classification Report:
-| Metric / Class        | Precision | Recall   | F1-score | Support   |
-| --------------------- | --------- | -------- | -------- | --------- |
-| **False (Not Churn)** | **0.85**  | **0.91** | **0.88** | **1 549** |
-| **True (Churn)**      | 0.70      | 0.55     | 0.62     | 561       |
-| **Accuracy**          | –         | –        | **0.82** | **2 110** |
-| **Macro Avg**         | 0.77      | 0.73     | 0.75     | 2 110     |
-| **Weighted Avg**      | 0.81      | 0.82     | 0.81     | 2 110     |
+## 📌 业务建议
 
-# 未来改进方向
-尝试更多的特征工程方法，例如特征交互或特征选择。
-使用更多的集成学习方法（如 Stacking）。
-进一步优化类别不平衡问题。
-部署模型并集成到实际业务流程中
+- 对于使用时间短且签署月度合约的客户，建议推出定向促销或优惠留存策略。
+- 建议将模型预测结果接入客户关系管理系统（CRM），实现提前预警和自动干预。
+
+---
+
+## 🚀 项目结构
+
+```bash
+.
+├── Telco Customer Churn Prediction.ipynb   # 主体 Notebook 项目
+├── data/
+│   └── WA_Fn-UseC_-Telco-Customer-Churn.csv
+├── README.md
